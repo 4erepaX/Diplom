@@ -8,28 +8,41 @@ namespace Diplom
     public abstract class BasePlayer : MonoBehaviour
 
     {
-        
+
         [SerializeField]
-        private int _level=1;
+        private int[] _level= new int[10];
         [SerializeField]
-        private int _hp;
+        private int _strength;
         [SerializeField]
-        private int _mp;
+        private int _agility;
         [SerializeField]
-        private float _attack;
-        [SerializeField]
-        [Range(0.1f, 100f)]
+        private int _intellegence;
+
+
+        [SerializeField, Range(100f, 200f), Tooltip("Скорость движения персонажа")]
         private float _forwardMoveSpeed = 10f;
+
         private float _minSpeed = 2f;
         private float _maxSpeed = 10f;
         private Animator _animator;
+        private int _hp;
+        private int _mp;
+        private float _attack;
+
         protected Rigidbody _body;
+
+        private void OnEnable()
+        {
+            _animator = GetComponent<Animator>();
+            _body = GetComponent<Rigidbody>();
+
+        }
         protected void Movement()
         {
             var position = Mouse.current.position.ReadValue();
             var targetMove = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, 19.5f));
             StartCoroutine(MoveForward(targetMove));
-            
+
         }
         private IEnumerator MoveForward(Vector3 target)
         {
@@ -37,7 +50,7 @@ namespace Diplom
             {
                 var velocity = _body.velocity;
                 transform.LookAt(target);
-                transform.rotation=Quaternion.Euler(0f,transform.rotation.eulerAngles.y,0f);
+                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
                 velocity.z = Mathf.Clamp(velocity.z + _forwardMoveSpeed * Time.fixedDeltaTime, _minSpeed, _maxSpeed);
                 _body.velocity = transform.forward * _forwardMoveSpeed * Time.fixedDeltaTime;
                 _animator.SetFloat("Movement", velocity.z);
@@ -51,10 +64,8 @@ namespace Diplom
             }
 
         }
-        private void OnEnable()
+        protected void Levels()
         {
-            _animator = GetComponent<Animator>();
-            _body = GetComponent<Rigidbody>();
 
         }
     }
