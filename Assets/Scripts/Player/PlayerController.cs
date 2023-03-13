@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Diplom
+namespace Diplom.Player
 {
     public class PlayerController : BasePlayer
     {
@@ -14,6 +14,8 @@ namespace Diplom
         {
             _control = new PlayerControl();
             _control.Player.Enable();
+
+
         }
         // Start is called before the first frame update
         void Start()
@@ -25,6 +27,15 @@ namespace Diplom
         void Update()
         {
 
+        }
+        private void OnDestroy()
+        {
+            _control.Player.Movement.performed -= _ => Movement();
+        }
+        private void OnDisable()
+        {
+            
+            _control.Player.Disable();
         }
     }
 }
