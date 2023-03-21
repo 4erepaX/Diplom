@@ -2,47 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Diplom.Enemy;
+using Diplom.Units.Enemy;
+using System.Linq;
 
-namespace Diplom.Player
+namespace Diplom.Units.Player
 {
     public abstract class BasePlayer : MonoBehaviour
 
     {
-
-        [SerializeField]
-        private int[] _level= new int[10];
-        [SerializeField]
-        private int _strength;
-        [SerializeField]
-        private int _agility;
-        [SerializeField]
-        private int _intellegence;
-
-
-        [SerializeField, Range(1f, 10f), Tooltip("Скорость движения персонажа")]
-        private float _forwardMoveSpeed = 3f;
-
         private Animator _animator;
-        private int _hp;
-        private int _mp;
-        private float _attack;
+        private float _forwardMoveSpeed;
         private EnemyController _enemy;
-
-
+        private TriggerComponent[] _colliders;
+        private PlayerStatsComponent _stats;
         protected Rigidbody _body;
-
-        
 
         private void OnEnable()
         {
+            _colliders = GetComponentsInChildren<TriggerComponent>();
             _animator = GetComponentInChildren<Animator>();
             _body = GetComponentInChildren<Rigidbody>();
-
+            _stats = GetComponentInChildren<PlayerStatsComponent>();
+            
         }
         protected void Movement()
         {
-            
+
+            _forwardMoveSpeed = _stats.GetMoveSpeed;
             var position = Mouse.current.position.ReadValue();
             var targetMove = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, 19.5f));
             var ray = Camera.main.ScreenPointToRay(position);
@@ -60,6 +46,7 @@ namespace Diplom.Player
         private IEnumerator MoveForward(Vector3 target)
         {
             _animator.SetBool("Attack", false) ;
+            
             while (_enemy == null)
             {
                 
@@ -85,7 +72,6 @@ namespace Diplom.Player
             {
                 var target = _enemy.transform.position;
                 var velocity = _body.velocity;
-                Debug.Log(Vector3.Distance(target, transform.position));
                 transform.LookAt(target);
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
                 velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
@@ -108,6 +94,13 @@ namespace Diplom.Player
         protected void Levels()
         {
 
+        }
+
+        private void OnCollider_UnityEvent(AnimationEvent data)
+        {
+            var collider = _colliders.FirstOrDefault(t => t.GetID == data.intParameter);
+
+            collider.Enable = data.floatParameter == 1;
         }
     }
 }

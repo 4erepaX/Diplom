@@ -2,23 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Diplom.Enemy
+namespace Diplom.Units.Enemy
 {
-
+    
     public class EnemyController : MonoBehaviour
     {
         [SerializeField]
-        private float _moveSpeed=1;
+        private float _moveSpeed;
+
+        private Rigidbody _body;
+        private Animator _animator;
         // Start is called before the first frame update
         void Start()
         {
-
+            _body = GetComponent<Rigidbody>();
+            _animator = GetComponent<Animator>();
         }
 
         // Update is called once per frame
         private void FixedUpdate()
         {
-            transform.position += transform.forward * _moveSpeed * Time.fixedDeltaTime;
+            _body.velocity= transform.forward * _moveSpeed * Time.fixedDeltaTime;
+            _animator.SetFloat("Movement", _body.velocity.z);
         }
+    
     }
 }

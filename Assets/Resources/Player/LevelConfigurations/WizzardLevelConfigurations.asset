@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7007152989e355144b9dd5c7d64e03b5, type: 3}
+  m_Name: WizzardLevelConfigurations
+  m_EditorClassIdentifier: 
+  _levels:
+  - _level: 1
+    _strength: 5
+    _agility: 10
+    _intellegence: 15
+  - _level: 2
+    _strength: 10
+    _agility: 15
+    _intellegence: 20
+  - _level: 3
+    _strength: 15
+    _agility: 20
+    _intellegence: 25
+  - _level: 4
+    _strength: 20
+    _agility: 25
+    _intellegence: 30
+  - _level: 5
+    _strength: 25
+    _agility: 30
+    _intellegence: 35
+  - _level: 6
+    _strength: 30
+    _agility: 35
+    _intellegence: 40
+  - _level: 0
+    _strength: 35
+    _agility: 40
+    _intellegence: 45
+  - _level: 0
+    _strength: 40
+    _agility: 45
+    _intellegence: 50
+  - _level: 0
+    _strength: 45
+    _agility: 50
+    _intellegence: 55
+  - _level: 0
+    _strength: 50
+    _agility: 55
+    _intellegence: 60

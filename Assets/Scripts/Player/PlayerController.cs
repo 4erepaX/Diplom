@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Diplom.Player
+namespace Diplom.Units.Player
 {
     public class PlayerController : BasePlayer
     {
