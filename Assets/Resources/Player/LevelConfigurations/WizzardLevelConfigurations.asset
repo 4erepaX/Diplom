@@ -17,39 +17,49 @@ MonoBehaviour:
     _strength: 5
     _agility: 10
     _intellegence: 15
+    _experience: 100
   - _level: 2
     _strength: 10
     _agility: 15
     _intellegence: 20
+    _experience: 200
   - _level: 3
     _strength: 15
     _agility: 20
     _intellegence: 25
+    _experience: 300
   - _level: 4
     _strength: 20
     _agility: 25
     _intellegence: 30
+    _experience: 400
   - _level: 5
     _strength: 25
     _agility: 30
     _intellegence: 35
+    _experience: 500
   - _level: 6
     _strength: 30
     _agility: 35
     _intellegence: 40
+    _experience: 600
   - _level: 0
     _strength: 35
     _agility: 40
     _intellegence: 45
+    _experience: 700
   - _level: 0
     _strength: 40
     _agility: 45
     _intellegence: 50
+    _experience: 800
   - _level: 0
     _strength: 45
     _agility: 50
     _intellegence: 55
+    _experience: 900
   - _level: 0
     _strength: 50
     _agility: 55
     _intellegence: 60
+    _experience: 1000

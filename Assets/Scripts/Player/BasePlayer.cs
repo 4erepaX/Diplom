@@ -91,10 +91,7 @@ namespace Diplom.Units.Player
             }
 
         }
-        protected void Levels()
-        {
 
-        }
 
         private void OnCollider_UnityEvent(AnimationEvent data)
         {

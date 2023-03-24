@@ -7,6 +7,5 @@ using UnityEngine;
 
 namespace Diplom
 {
-    [Serializable]
-    public class StatsDictionary : SerializableDictionaryBase<StatsType, Container> { }
+
 }

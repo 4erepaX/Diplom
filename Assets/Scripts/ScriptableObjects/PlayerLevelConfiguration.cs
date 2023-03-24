@@ -11,5 +11,7 @@ namespace Diplom.ScriptableObjects
     {
         [SerializeField, OneLine(Header =LineHeader.Short)]
         private PlayerLevel[] _levels=new PlayerLevel[10];
+
+        public PlayerLevel[] Levels => _levels;
     }
 }
