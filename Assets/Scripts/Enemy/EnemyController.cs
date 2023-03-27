@@ -66,5 +66,9 @@ namespace Diplom.Units.Enemy
 
             trigger.Enable = data.floatParameter == 1;
         }
+        private void GetEnemyParameters()
+        {
+
+        }
     }
 }

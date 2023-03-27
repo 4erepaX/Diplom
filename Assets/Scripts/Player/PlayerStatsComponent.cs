@@ -33,10 +33,16 @@ namespace Diplom.Units.Player
         private int _intellegence;
         private byte _level;
 
+
+
+
         public float Health => _health;
         public float Mana => _mana;
+        public int Experience => _experience;
         public float Attack => _attack;
         public float Defence => _defence;
+        public byte Level => _level;
+
         public float GetMoveSpeed => _moveSpeed;
         private void GetLevelParameters()
         {
@@ -66,18 +72,19 @@ namespace Diplom.Units.Player
             _attack = _defaultAttack + _addedAttack;
             _defence = _defaultDefence + _addedDefence;
         }
-        private void Start()
+        private void Awake()
         {
+            
             _level = 1;
             GetLevelParameters();
             SetDefaultParameters();
             SetAddedParameters();
             SetParameters();
-            Debug.Log(Health);
+            Debug.Log(Mana);
         }
         private bool LevelUp()
         {
-            if (_level < 10 && _experience < _levelConfiguration.Levels[_level - 1].Experience) return true;
+            if (_level < 10 && _experience == _levelConfiguration.Levels[_level - 1].Experience) return true;
             else return false;
         }
         private void FixedUpdate()
@@ -90,5 +97,7 @@ namespace Diplom.Units.Player
                 SetParameters();
             }
         }
+
+
     }
 }

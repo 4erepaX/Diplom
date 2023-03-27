@@ -89,9 +89,9 @@ namespace Diplom.Units.Player
                 }
                 yield return new WaitForFixedUpdate();
             }
-
+        
         }
-
+        
 
         private void OnCollider_UnityEvent(AnimationEvent data)
         {
