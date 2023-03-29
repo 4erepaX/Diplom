@@ -17,7 +17,8 @@ namespace Diplom.Units.Player
         // Update is called once per frame
         private void LateUpdate()
         {
-            transform.position = _target.transform.position;
+            if (_target!=null) transform.position = _target.transform.position;
+            if (_target == null && FindObjectsOfType<Camera>().Length > 1) Destroy(gameObject);
         }
        
     }

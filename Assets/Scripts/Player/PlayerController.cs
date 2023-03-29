@@ -8,8 +8,7 @@ namespace Diplom.Units.Player
     public class PlayerController : BasePlayer
     {
         private PlayerControl _control;
-        
-       
+
         private void Awake()
         {
             _control = new PlayerControl();
@@ -20,6 +19,7 @@ namespace Diplom.Units.Player
         // Start is called before the first frame update
         void Start()
         {
+            transform.parent = null;
             _control.Player.Movement.performed += _ => Movement();
         }
 
@@ -31,11 +31,8 @@ namespace Diplom.Units.Player
         private void OnDestroy()
         {
             _control.Player.Movement.performed -= _ => Movement();
-        }
-        private void OnDisable()
-        {
-            
             _control.Player.Disable();
         }
+
     }
 }

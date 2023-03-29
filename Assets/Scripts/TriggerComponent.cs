@@ -33,7 +33,7 @@ namespace Diplom.Units
         }
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.isTrigger) Debug.Log(other.name);
+            
         }
     }
 }

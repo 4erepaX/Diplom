@@ -27,36 +27,45 @@ namespace Diplom.Units.Enemy
             _body = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
             _triggers = GetComponentsInChildren<TriggerComponent>();
+            StartCoroutine(MoveForward());
         }
 
         // Update is called once per frame
         private void FixedUpdate()
         {
-            _targetBuild = FindObjectOfType<BuildingComponent>();
+            _targetBuild = FindObjectsOfType<BuildingComponent>().Where(t=>t.Side==SideType.Friendly).FirstOrDefault();
             _target = FindObjectOfType<PlayerController>();
-            if (Vector3.Distance(_target.transform.position, transform.position) < 10)
+            if (_target != null && Vector3.Distance(_target.transform.position, transform.position) < 10)
+            {
                 transform.LookAt(_target.transform);
-            if (Vector3.Distance(_target.transform.position, transform.position) < 2)
+                Attack(_target.transform,2);
+            }
+            if (_targetBuild != null && (_target == null || Vector3.Distance(_target.transform.position, transform.position) > 10))
+            {
+                transform.LookAt(_targetBuild.transform);
+                Attack(_targetBuild.transform,4);
+            }
+        }
+        private void Attack(Transform target,float range)
+        {
+            if (Vector3.Distance(target.position, transform.position) < range)
             {
                 _body.velocity = new Vector3(0f, 0f, 0f);
                 _animator.SetFloat("Movement", 0f);
-                _animator.SetBool("Attack", true);
+                if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
+                else _animator.SetBool("Attack", false);
             }
             else
             {
                 _animator.SetBool("Attack", false);
             }
         }
-        private void Movement()
-        {
-            _targetBuild = FindObjectOfType<BuildingComponent>();
-        }
         private IEnumerator MoveForward()
         {
             while (true)
             {
                 _body.velocity = transform.forward * _moveSpeed * Time.fixedDeltaTime;
-                _animator.SetFloat("Movement", _body.velocity.z);
+                _animator.SetFloat("Movement",Mathf.Abs( _body.velocity.z));
                 yield return null;
             }
         }
@@ -66,9 +75,6 @@ namespace Diplom.Units.Enemy
 
             trigger.Enable = data.floatParameter == 1;
         }
-        private void GetEnemyParameters()
-        {
 
-        }
     }
 }

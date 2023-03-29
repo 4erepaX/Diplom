@@ -50,7 +50,7 @@ namespace Diplom.UI.Player
                 _manaSlider.value= _playerBattle.Mana / _playerStats.Mana;
                 _manaText.text = _playerStats.Mana.ToString();
                 _experienceSlider.value = _playerBattle.Experience / _playerStats.Experience;
-                _experienceText.text = _playerStats.Experience.ToString();
+                _experienceText.text = _playerBattle.Experience.ToString();
         
             }
             

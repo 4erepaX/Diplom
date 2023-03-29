@@ -17,6 +17,8 @@ namespace Diplom.Units.Player
         private PlayerStatsComponent _stats;
         protected Rigidbody _body;
 
+        public EnemyController Enemy => _enemy;
+
         private void OnEnable()
         {
             _colliders = GetComponentsInChildren<TriggerComponent>();
@@ -27,7 +29,6 @@ namespace Diplom.Units.Player
         }
         protected void Movement()
         {
-
             _forwardMoveSpeed = _stats.GetMoveSpeed;
             var position = Mouse.current.position.ReadValue();
             var targetMove = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, 19.5f));
@@ -48,8 +49,7 @@ namespace Diplom.Units.Player
             _animator.SetBool("Attack", false) ;
             
             while (_enemy == null)
-            {
-                
+            {                
                 var velocity = _body.velocity;
                 transform.LookAt(target);
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
@@ -81,7 +81,8 @@ namespace Diplom.Units.Player
                 {
                     _body.velocity = new Vector3(0f, 0f, 0f);
                     _animator.SetFloat("Movement", 0f);
-                    _animator.SetBool("Attack", true);
+                    if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
+                    else _animator.SetBool("Attack", false);
                 }
                 else
                 {

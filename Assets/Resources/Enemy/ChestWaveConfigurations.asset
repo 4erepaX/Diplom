@@ -18,16 +18,16 @@ MonoBehaviour:
     _agility: 5
     _intellegence: 5
     _gold: 100
-    _experience: 100
+    _experience: 25
   - _wave: 2
     _strength: 10
     _agility: 10
     _intellegence: 10
     _gold: 200
-    _experience: 200
+    _experience: 25
   - _wave: 3
     _strength: 15
     _agility: 15
     _intellegence: 15
     _gold: 300
-    _experience: 300
+    _experience: 25
