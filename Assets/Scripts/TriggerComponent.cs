@@ -26,14 +26,5 @@ namespace Diplom.Units
             _collider.isTrigger = true;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-        private void OnTriggerEnter(Collider other)
-        {
-            
-        }
     }
 }

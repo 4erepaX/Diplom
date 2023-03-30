@@ -26,7 +26,6 @@ namespace Diplom.UI.Enemy
         private PlayerController _playerController;
 
 
-
         // Start is called before the first frame update
         void Start()
         {
@@ -53,10 +52,6 @@ namespace Diplom.UI.Enemy
                 _agilityText.text = string.Concat(_enemyStats.Agility);
                 _intellegenceText.text = string.Concat(_enemyStats.Intellegence);
             }
-        }
-        public void OnClick()
-        {
-
         }
     }
 }

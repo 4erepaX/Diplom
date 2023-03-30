@@ -1,4 +1,5 @@
-﻿using Diplom.Units.Player;
+﻿using Diplom.Projectile;
+using Diplom.Units.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,10 +25,17 @@ namespace Diplom.Units.Enemy
         }
         private void OnTriggerEnter(Collider other)
         {
+            
             var enemy = other.GetComponentInParent<PlayerStatsComponent>();
-            if (enemy != null && other.isTrigger && other.GetComponentInParent<PlayerController>().Enemy==this.GetComponent<EnemyController>())
+            if (other.GetComponent<ProjectileMove>() != null)
+            {
+                enemy = FindObjectOfType<PlayerStatsComponent>();
+                Destroy(other.gameObject);
+            }
+            if (enemy != null && other.isTrigger && enemy.GetComponentInParent<PlayerController>().Enemy==this.GetComponent<EnemyController>())
             {
                 _health -= enemy.Attack - _stats.EnemyDefence / 10;
+               
             }
             if (_health <= 0)
             {
@@ -35,6 +43,7 @@ namespace Diplom.Units.Enemy
                 _health = 0;
                 _isDie = true;
             }
+            
         }
         private void OnDie_UnityEvent(AnimationEvent data)
         {

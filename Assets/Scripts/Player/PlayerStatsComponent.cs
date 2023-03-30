@@ -84,7 +84,7 @@ namespace Diplom.Units.Player
         }
         private void Awake()
         {
-            
+            _playerBattle = GetComponent<PlayerBattleComponent>();
             _level = 1;
             GetLevelParameters();
             SetDefaultParameters();

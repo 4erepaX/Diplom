@@ -4,23 +4,40 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Diplom.Units.Enemy;
 using System.Linq;
+using Diplom.Buildings;
 
 namespace Diplom.Units.Player
 {
     public abstract class BasePlayer : MonoBehaviour
 
     {
+        [SerializeField]
+        private PlayerType _type;
         private Animator _animator;
         private float _forwardMoveSpeed;
         private EnemyController _enemy;
         private TriggerComponent[] _colliders;
         private PlayerStatsComponent _stats;
         protected Rigidbody _body;
-
+        private int _range;
+        private BuildingComponent _enemyBuilding;
         public EnemyController Enemy => _enemy;
 
         private void OnEnable()
         {
+            switch (_type)
+            {
+                case PlayerType.Warrior:
+                    _range = 2;
+                    break;
+                case PlayerType.Shooter:
+                    _range = 5;
+                    break;
+                case PlayerType.Wizzard:
+                    _range = 5;
+                    break;
+
+            }
             _colliders = GetComponentsInChildren<TriggerComponent>();
             _animator = GetComponentInChildren<Animator>();
             _body = GetComponentInChildren<Rigidbody>();
@@ -39,10 +56,21 @@ namespace Diplom.Units.Player
                     _enemy = hit.collider.GetComponent<EnemyController>();                
                 else 
                     _enemy = null;
-            }
-            if (_enemy == null) StartCoroutine(MoveForward(targetMove));
-            if (_enemy != null) StartCoroutine(MoveToEnemy());
 
+                if (hit.collider.GetComponent<BuildingComponent>() != null)
+                {
+                    _enemyBuilding = hit.collider.GetComponent<BuildingComponent>();
+                    if (_enemyBuilding.Side==SideType.Friendly) _enemyBuilding = null;
+                }
+                else
+                    _enemyBuilding = null;
+                
+            }
+            if (gameObject.activeSelf)
+            {
+                if (_enemy == null) StartCoroutine(MoveForward(targetMove));
+                if (_enemy != null || _enemyBuilding != null) StartCoroutine(MoveTarget());
+            }
         }
         private IEnumerator MoveForward(Vector3 target)
         {
@@ -66,31 +94,44 @@ namespace Diplom.Units.Player
             }
 
         }
-        private IEnumerator MoveToEnemy()
+        private IEnumerator MoveTarget()
         {
-            while (_enemy!=null)
+            while (_enemy != null || _enemyBuilding != null)
             {
-                var target = _enemy.transform.position;
-                var velocity = _body.velocity;
-                transform.LookAt(target);
-                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-                velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
-                _body.velocity = transform.forward * velocity.z;
-                _animator.SetFloat("Movement", velocity.z);
-                if (Vector3.Distance(target, transform.position) < 2)
+                Vector3 target;
+                if (_enemy != null)
                 {
-                    _body.velocity = new Vector3(0f, 0f, 0f);
-                    _animator.SetFloat("Movement", 0f);
-                    if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
-                    else _animator.SetBool("Attack", false);
+                    target = _enemy.transform.position;
+                    MoveToEnemy(target, _range);
                 }
-                else
+                if (_enemyBuilding != null)
                 {
-                    _animator.SetBool("Attack", false);
+                    target = _enemyBuilding.transform.position;
+                    MoveToEnemy(target, _range + 3f);
                 }
                 yield return new WaitForFixedUpdate();
             }
         
+        }
+        private void MoveToEnemy(Vector3 target, float range)
+        {
+            var velocity = _body.velocity;
+            transform.LookAt(target);
+            transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+            velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
+            _body.velocity = transform.forward * velocity.z;
+            _animator.SetFloat("Movement", velocity.z);
+            if (Vector3.Distance(target, transform.position) < range)
+            {
+                _body.velocity = new Vector3(0f, 0f, 0f);
+                _animator.SetFloat("Movement", 0f);
+                if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
+                else _animator.SetBool("Attack", false);
+            }
+            else
+            {
+                _animator.SetBool("Attack", false);
+            }
         }
         
 

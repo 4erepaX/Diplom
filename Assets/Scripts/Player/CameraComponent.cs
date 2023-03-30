@@ -10,8 +10,11 @@ namespace Diplom.Units.Player
         // Start is called before the first frame update
         void Start()
         {
-            _target = transform.parent.GetComponent<PlayerController>();
-            transform.parent = null;
+            if (transform.parent != null)
+            {
+                _target = transform.parent.GetComponent<PlayerController>();
+                transform.parent = null;
+            }
         }
 
         // Update is called once per frame

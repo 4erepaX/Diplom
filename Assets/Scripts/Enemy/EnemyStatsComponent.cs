@@ -1,4 +1,5 @@
-﻿using Diplom.ScriptableObjects;
+﻿using Diplom.Managers;
+using Diplom.ScriptableObjects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Diplom.Units.Enemy
         private int _strength;
         private int _agility;
         private int _intellegence;
-
+        private GameManager _gameManager; 
         public byte Wave => _wave;
         public int Strength=> _strength;
         public int Agility=>_agility;
@@ -33,10 +34,11 @@ namespace Diplom.Units.Enemy
         public int DropExperience => _experience;
 
         // Start is called before the first frame update
-        private void Awake()
-        {                    
+        private void Start()
+        {
             //Перенести в gameManager
-            _wave = 1;
+            _gameManager = FindObjectOfType<GameManager>();
+           _wave = _gameManager.Wave;
             GetWaveParameters();
             SetWaveParameters();
             SetDrop();

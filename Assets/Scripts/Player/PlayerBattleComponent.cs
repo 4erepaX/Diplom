@@ -76,6 +76,15 @@ namespace Diplom.Units.Player
             
             if (data.intParameter == 0) gameObject.SetActive(false) ;
         }
+        private void OnFire_UnityEvent(AnimationEvent data)
+        {
+       
+            if (data.intParameter==1 && _animator.GetBool("Attack"))
+            {
+                var _projectile = GetComponent<PlayerProjectile>();
+                Instantiate(_projectile.Projectile,_projectile.FirePoint);
+            }
+        }
         public void LevelUp()
         {
 
@@ -96,6 +105,7 @@ namespace Diplom.Units.Player
         {
             _health = _stats.Health;
             _mana = _stats.Mana;
+            _animator.SetBool("Attack", false);
         }
     }
 }

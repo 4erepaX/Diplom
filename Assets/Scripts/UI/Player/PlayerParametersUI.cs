@@ -24,9 +24,12 @@ namespace Diplom.UI.Player
         // Update is called once per frame
         void Update()
         {
-            _strengthText.text = _stats.Strength.ToString();
-            _agilityText.text = _stats.Agility.ToString();
-            _intellegenceText.text = _stats.Intellegence.ToString();
+            if (_stats != null)
+            {
+                _strengthText.text = _stats.Strength.ToString();
+                _agilityText.text = _stats.Agility.ToString();
+                _intellegenceText.text = _stats.Intellegence.ToString();
+            }
         }
     }
 }
