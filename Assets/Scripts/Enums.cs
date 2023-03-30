@@ -7,8 +7,7 @@ namespace Diplom
     public enum PlayerType : byte
     {
         Warrior = 0,
-        Shooter = 1,
-        Wizzard = 2
+        Wizzard = 1
     }
     public enum SideType : byte
     {

@@ -30,9 +30,6 @@ namespace Diplom.Units.Player
                 case PlayerType.Warrior:
                     _range = 2;
                     break;
-                case PlayerType.Shooter:
-                    _range = 5;
-                    break;
                 case PlayerType.Wizzard:
                     _range = 5;
                     break;
