@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9052749931326074659}
   - component: {fileID: 9052749931326074661}
   - component: {fileID: 9052749931326074660}
+  - component: {fileID: 4938485495789661621}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -83,6 +84,22 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9052749931326074658}
   m_Enabled: 1
+--- !u!114 &4938485495789661621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9052749931326074658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1 &9052749931396412172
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,14 +154,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9052749931898892001}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.3470497, y: -0.050000012, z: 3.5974603}
+  m_LocalRotation: {x: -0.3420201, y: 0, z: 0, w: 0.9396927}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 9052749931326074659}
   m_Father: {fileID: 9056193236224341580}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -40, y: 0, z: 0}
 --- !u!114 &9052749931898892002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1927,7 +1944,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9053849141653204052}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.5544424, y: 0.5, z: 7.5040016}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9056360726165971288}
@@ -2043,7 +2060,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91ea29cf67312ff4cb30bae3b6902768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 2
+  _type: 1
+  _mask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &9053853498792224634
 GameObject:
   m_ObjectHideFlags: 0

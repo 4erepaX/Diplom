@@ -15,13 +15,10 @@ namespace Diplom.UI.ChooseHero
         private GameObject _UI;
         [SerializeField]
         private GameObject _chooseUI;
-        [SerializeField]
-        private GameObject _gameManager;
         public void OnPointerClick(PointerEventData eventData)
         {
             Instantiate(_heroPrefab, _spawnPoint);
             _UI.SetActive(true);
-            _gameManager.SetActive(true);
             Destroy(_chooseUI);
         }
     }

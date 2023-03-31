@@ -16,6 +16,8 @@ namespace Diplom.Buildings
         [SerializeField]
         private float _defence;
         public SideType Side => _side;
+        public float Health => _health;
+        public float Defence => _defence;
         private void Start()
         {
             _health = 10000;
@@ -51,6 +53,7 @@ namespace Diplom.Buildings
                 if (_health <= 0)
                 {
                     _health = 0;
+                    Destroy(gameObject);
                 }
 
             }

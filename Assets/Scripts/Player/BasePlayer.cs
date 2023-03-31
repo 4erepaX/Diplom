@@ -20,9 +20,11 @@ namespace Diplom.Units.Player
         private PlayerStatsComponent _stats;
         protected Rigidbody _body;
         private int _range;
+        [SerializeField]
+        private LayerMask _mask;
         private BuildingComponent _enemyBuilding;
         public EnemyController Enemy => _enemy;
-
+        public BuildingComponent EnemyBuilding => _enemyBuilding;
         private void OnEnable()
         {
             switch (_type)
@@ -45,10 +47,16 @@ namespace Diplom.Units.Player
         {
             _forwardMoveSpeed = _stats.GetMoveSpeed;
             var position = Mouse.current.position.ReadValue();
-            var targetMove = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, 19.5f));
+          
             var ray = Camera.main.ScreenPointToRay(position);
+            if (Physics.Raycast(ray, out var _hit,_mask))
+            {
+                var targetMove = _hit.point;
+                if (_enemy == null) StartCoroutine(MoveForward(targetMove));
+            }
             if (Physics.Raycast(ray, out var hit))
             {
+                
                 if (hit.collider.GetComponent<EnemyController>()!=null)              
                     _enemy = hit.collider.GetComponent<EnemyController>();                
                 else 
@@ -61,11 +69,6 @@ namespace Diplom.Units.Player
                 }
                 else
                     _enemyBuilding = null;
-                
-            }
-            if (gameObject.activeSelf)
-            {
-                if (_enemy == null) StartCoroutine(MoveForward(targetMove));
                 if (_enemy != null || _enemyBuilding != null) StartCoroutine(MoveTarget());
             }
         }

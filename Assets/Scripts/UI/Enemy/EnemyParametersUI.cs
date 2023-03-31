@@ -52,6 +52,16 @@ namespace Diplom.UI.Enemy
                 _agilityText.text = string.Concat(_enemyStats.Agility);
                 _intellegenceText.text = string.Concat(_enemyStats.Intellegence);
             }
+            if (_playerController.EnemyBuilding != null)
+            {
+    
+                _waveText.text = string.Concat("Wave= -");
+                _healthText.text = string.Concat("Health= ", _playerController.EnemyBuilding.Health);
+                _manaText.text = string.Concat("Mana= 0");
+                _strengthText.text = string.Concat("None");
+                _agilityText.text = string.Concat("None");
+                _intellegenceText.text = string.Concat("None");
+            }
         }
     }
 }
