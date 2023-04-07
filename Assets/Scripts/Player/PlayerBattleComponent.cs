@@ -1,4 +1,5 @@
-﻿using Diplom.Units.Enemy;
+﻿using Diplom.Spawners.Player;
+using Diplom.Units.Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace Diplom.Units.Player
         private EnemyStatsComponent _enemyStats;
         [SerializeField]
         private EnemyBattleComponent _enemyBattle;
+        private PlayerSpawner _spawner;
+
         private PlayerController _playerController;
         private float _health;
         private float _mana;
@@ -33,6 +36,8 @@ namespace Diplom.Units.Player
             _playerController = GetComponent<PlayerController>();
             _stats = GetComponent<PlayerStatsComponent>();
             
+            _spawner = FindObjectOfType<PlayerSpawner>();
+            Debug.Log(_spawner);
             _health = _stats.Health;
             _mana = _stats.Mana;
             
@@ -42,6 +47,7 @@ namespace Diplom.Units.Player
         {
             if (_playerController.Enemy != null)
             {
+                
                 _enemyStats = _playerController.Enemy.GetComponent<EnemyStatsComponent>();
                 _enemyBattle = _playerController.Enemy.GetComponent<EnemyBattleComponent>();
                 var exp = _enemyStats.DropExperience;
@@ -69,12 +75,14 @@ namespace Diplom.Units.Player
             {
                 _animator.SetTrigger("Die");
                 _health = 0;
+                
             }
         }
             private void OnDie_UnityEvent(AnimationEvent data)
         {
-            
+            _spawner.OnRespawn(gameObject, this);
             if (data.intParameter == 0) gameObject.SetActive(false) ;
+            
         }
         private void OnFire_UnityEvent(AnimationEvent data)
         {

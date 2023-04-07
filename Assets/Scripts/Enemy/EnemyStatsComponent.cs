@@ -36,7 +36,6 @@ namespace Diplom.Units.Enemy
         // Start is called before the first frame update
         private void Start()
         {
-            //Перенести в gameManager
             _gameManager = FindObjectOfType<GameManager>();
            _wave = _gameManager.Wave;
             GetWaveParameters();

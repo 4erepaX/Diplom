@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Diplom.Units.Enemy;
 using System.Linq;
 using Diplom.Buildings;
+using Diplom.UI.Enemy;
 
 namespace Diplom.Units.Player
 {
@@ -16,6 +17,8 @@ namespace Diplom.Units.Player
         private Animator _animator;
         private float _forwardMoveSpeed;
         private EnemyController _enemy;
+        private EnemyBattleComponent _enemyBattleStat;
+        private EnemyStatsComponent _enemyStat;
         private TriggerComponent[] _colliders;
         private PlayerStatsComponent _stats;
         protected Rigidbody _body;
@@ -23,7 +26,10 @@ namespace Diplom.Units.Player
         [SerializeField]
         private LayerMask _mask;
         private BuildingComponent _enemyBuilding;
+
         public EnemyController Enemy => _enemy;
+        public EnemyBattleComponent EnemyBattleStat=>_enemyBattleStat;
+        public EnemyStatsComponent EnemyStat=>_enemyStat;
         public BuildingComponent EnemyBuilding => _enemyBuilding;
         private void OnEnable()
         {
@@ -45,31 +51,43 @@ namespace Diplom.Units.Player
         }
         protected void Movement()
         {
-            _forwardMoveSpeed = _stats.GetMoveSpeed;
-            var position = Mouse.current.position.ReadValue();
-          
-            var ray = Camera.main.ScreenPointToRay(position);
-            if (Physics.Raycast(ray, out var _hit,_mask))
+            if (gameObject.activeSelf)
             {
-                var targetMove = _hit.point;
-                if (_enemy == null) StartCoroutine(MoveForward(targetMove));
-            }
-            if (Physics.Raycast(ray, out var hit))
-            {
-                
-                if (hit.collider.GetComponent<EnemyController>()!=null)              
-                    _enemy = hit.collider.GetComponent<EnemyController>();                
-                else 
-                    _enemy = null;
+                _forwardMoveSpeed = _stats.GetMoveSpeed;
+                var position = Mouse.current.position.ReadValue();
 
-                if (hit.collider.GetComponent<BuildingComponent>() != null)
+                var ray = Camera.main.ScreenPointToRay(position);
+
+                if (Physics.Raycast(ray, out var hit))
                 {
-                    _enemyBuilding = hit.collider.GetComponent<BuildingComponent>();
-                    if (_enemyBuilding.Side==SideType.Friendly) _enemyBuilding = null;
+
+                    if (Mathf.Pow(2, hit.collider.gameObject.layer) == _mask.value)
+                    {
+                        var targetMove = hit.point;
+                        if (_enemy == null) StartCoroutine(MoveForward(targetMove));
+                    }
+                    if (hit.collider.GetComponent<EnemyController>() != null)
+                    {
+                        _enemy = hit.collider.GetComponent<EnemyController>();
+                        _enemyBattleStat = hit.collider.GetComponent<EnemyBattleComponent>();
+                        _enemyStat = hit.collider.GetComponent<EnemyStatsComponent>();
+
+                    }
+                    else
+                    {
+                        _enemy = null;
+                        _enemyBattleStat = null;
+                        _enemyStat = null;
+                    }
+                    if (hit.collider.GetComponent<BuildingComponent>() != null)
+                    {
+                        _enemyBuilding = hit.collider.GetComponent<BuildingComponent>();
+                        if (_enemyBuilding.Side == SideType.Friendly) _enemyBuilding = null;
+                    }
+                    else
+                        _enemyBuilding = null;
+                    if (_enemy != null || _enemyBuilding != null) StartCoroutine(MoveTarget());
                 }
-                else
-                    _enemyBuilding = null;
-                if (_enemy != null || _enemyBuilding != null) StartCoroutine(MoveTarget());
             }
         }
         private IEnumerator MoveForward(Vector3 target)

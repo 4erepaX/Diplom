@@ -1,4 +1,5 @@
-﻿using Diplom.Units.Enemy;
+﻿using Diplom.Managers.Enemy;
+using Diplom.Units.Enemy;
 using Diplom.Units.Player;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,9 @@ namespace Diplom.UI.Enemy
         private TMP_Text _agilityText;
         [SerializeField]
         private TMP_Text _intellegenceText;
+        [SerializeField]
+        private EnemyManager _enemyManager;
+
         private EnemyBattleComponent _enemyBattle;
         private EnemyStatsComponent _enemyStats;
         private PlayerController _playerController;
@@ -43,8 +47,8 @@ namespace Diplom.UI.Enemy
         {
             if (_playerController.Enemy != null)
             {
-                _enemyBattle = _playerController.Enemy.GetComponent<EnemyBattleComponent>();
-                _enemyStats = _playerController.Enemy.GetComponent<EnemyStatsComponent>();
+                _enemyBattle = _playerController.EnemyBattleStat;
+                _enemyStats = _playerController.EnemyStat;
                 _waveText.text = string.Concat("Wave= ", _enemyStats.Wave);
                 _healthText.text = string.Concat("Health= ", _enemyBattle.Health);
                 _manaText.text = string.Concat("Mana= ", _enemyStats.EnemyMana);
@@ -63,5 +67,6 @@ namespace Diplom.UI.Enemy
                 _intellegenceText.text = string.Concat("None");
             }
         }
+
     }
 }

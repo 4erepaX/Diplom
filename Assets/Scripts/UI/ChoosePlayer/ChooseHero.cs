@@ -2,24 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Diplom.UI.ChooseHero
 {
     public class ChooseHero : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField]
-        private GameObject _heroPrefab;
-        [SerializeField]
-        private Transform _spawnPoint;
-        [SerializeField]
-        private GameObject _UI;
-        [SerializeField]
-        private GameObject _chooseUI;
+        private ChooseHero _hero;
+
+        private bool _isChoosen;
+        private Outline _outline;
+        
+        public bool IsChoosen => _isChoosen;
+        private void Start()
+        {
+            _outline = GetComponent<Outline>();
+            _outline.enabled = false;
+            _isChoosen = false;
+        }
         public void OnPointerClick(PointerEventData eventData)
         {
-            Instantiate(_heroPrefab, _spawnPoint);
-            _UI.SetActive(true);
-            Destroy(_chooseUI);
+            
+            if (!_hero._isChoosen)
+            {
+                if (!_isChoosen)
+                {
+                    _outline.enabled = true;
+                    _isChoosen = true;
+                }
+                else
+                {
+                    _outline.enabled = false;
+                    _isChoosen = false;
+                }
+            }
         }
+
     }
 }

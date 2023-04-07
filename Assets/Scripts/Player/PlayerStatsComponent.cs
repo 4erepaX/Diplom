@@ -97,7 +97,6 @@ namespace Diplom.Units.Player
            
             if (LevelUp())
             {
-                Debug.Log("Работает?");
                 _level++;
                 GetLevelParameters();
                 SetDefaultParameters();

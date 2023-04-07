@@ -33,8 +33,6 @@ namespace Diplom.Managers
         void Start()
         {
             _player = FindObjectOfType<PlayerController>().gameObject;
-            StartCoroutine(RespawnHero());
-            StartCoroutine(SpawnEnemies());
             StartCoroutine(WaveChange());
             
         }
@@ -57,33 +55,7 @@ namespace Diplom.Managers
                 yield return null;
             }
         }
-        private IEnumerator RespawnHero()
-        {
-            while (true)
-            {
-                if (FindObjectOfType<PlayerController>() != null) yield return null;
-                yield return new WaitForSeconds(5f);
-                if (FindObjectOfType<PlayerController>() == null)
-                {
-                    _player.transform.position = _respawnPoint.position;
-                    _player.SetActive(true);
-                    FindObjectOfType<PlayerBattleComponent>().OnRespawn();
-                }
-            }
-        }
-        private IEnumerator SpawnEnemies()
-        {
-            while(true)
-            {
-                yield return new WaitForSeconds(20f);
-                if (FindObjectsOfType<EnemyController>().Length < 12)
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Instantiate(_enemyPrefab, _spawnEnemyPoint[i]);
-                    }
-                }
-            }
-        }
+
+
     }
 }

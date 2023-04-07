@@ -28,13 +28,14 @@ namespace Diplom.Units.Enemy
             _animator = GetComponent<Animator>();
             _triggers = GetComponentsInChildren<TriggerComponent>();
             StartCoroutine(MoveForward());
+            _targetBuild = FindObjectsOfType<BuildingComponent>().Where(t => t.Side == SideType.Friendly).FirstOrDefault();
+            _target = FindObjectOfType<PlayerController>();
         }
 
         // Update is called once per frame
         private void FixedUpdate()
         {
-            _targetBuild = FindObjectsOfType<BuildingComponent>().Where(t=>t.Side==SideType.Friendly).FirstOrDefault();
-            _target = FindObjectOfType<PlayerController>();
+            
             if (_target != null && Vector3.Distance(_target.transform.position, transform.position) < 10)
             {
                 transform.LookAt(_target.transform);
