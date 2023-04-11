@@ -32,10 +32,15 @@ namespace Diplom.Units.Player
         private int _strength;
         private int _agility;
         private int _intellegence;
+        private int _addStrength;
+        private int _addAgility;
+        private int _addIntellegence;
         private byte _level;
+        private float _hp;
+        private float _mp;
 
-
-
+        public float HP => _hp;
+        public float MP => _mp;
         public float Health => _health;
         public float Mana => _mana;
         public float Experience => _experience;
@@ -45,6 +50,9 @@ namespace Diplom.Units.Player
         public int Strength=> _strength;
         public int Agility=>_agility;
         public int Intellegence=>_intellegence;
+        public int AddStrength => _addStrength;
+        public int AddAgility => _addAgility;
+        public int AddIntellegence => _addIntellegence;
         public float GetMoveSpeed => _moveSpeed;
         private bool LevelUp()
         {
@@ -69,18 +77,23 @@ namespace Diplom.Units.Player
 
         private void SetAddedParameters()
         {
-            _addedHealth = 0;
-            _addedMana = 0;
-            _addedAttack = 0;
-            _addedDefence = 0;
+            _addedHealth = _addStrength*100;
+            _addedMana = _addIntellegence*100;
+            _addedAttack = _addStrength * 5 + _addAgility * 5 + _addIntellegence * 5;
+            _addedDefence = _addAgility * 10;
         }
         private void SetParameters()
         {
+            float lasthp = _health;
+            float lastmp = _mana;
             _health = _defaultHealth + _addedHealth;
             _mana = _defaultMana + _addedMana;
             _attack = _defaultAttack + _addedAttack;
             _defence = _defaultDefence + _addedDefence;
-            
+            if (lasthp != 0)
+            _hp= _playerBattle.Health+((_health * 100 / lasthp - 100) * _playerBattle.Health) /(_playerBattle.Health * 100 / lasthp );
+            if (lastmp!=0)
+            _mp = _playerBattle.Mana + ((_mana * 100 / lastmp - 100) * _playerBattle.Mana) / (_playerBattle.Mana * 100 / lastmp); ;
         }
         private void Awake()
         {
@@ -104,7 +117,14 @@ namespace Diplom.Units.Player
                 _playerBattle.LevelUp();
             }
         }
-
+        public void SetAddStats(int Strength, int Agility, int Intellegence)
+        {
+            _addStrength += Strength;
+            _addAgility += Agility;
+            _addIntellegence += Intellegence;
+            SetAddedParameters();
+            SetParameters();
+        }
 
     }
 }

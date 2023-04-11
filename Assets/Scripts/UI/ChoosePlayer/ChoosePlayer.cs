@@ -12,6 +12,8 @@ namespace Diplom.UI.ChooseHero
         [SerializeField]
         private GameObject _panel;
         [SerializeField]
+        private GameObject _level;
+        [SerializeField]
         private GameObject _warriorPrefab;
         [SerializeField]
         private GameObject _wizzardPrefab;
@@ -59,6 +61,7 @@ namespace Diplom.UI.ChooseHero
                     Instantiate(HeroPrefab, SpawnPoint);
                    
                     _UI.SetActive(true);
+                    _level.SetActive(true);
                     _spawner.GetHero(HeroPrefab);
                 }
                     yield return null;

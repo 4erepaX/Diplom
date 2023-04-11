@@ -26,9 +26,9 @@ namespace Diplom.UI.Player
         {
             if (_stats != null)
             {
-                _strengthText.text = _stats.Strength.ToString();
-                _agilityText.text = _stats.Agility.ToString();
-                _intellegenceText.text = _stats.Intellegence.ToString();
+                _strengthText.text = string.Concat(_stats.Strength+_stats.AddStrength);
+                _agilityText.text = string.Concat(_stats.Agility + _stats.AddAgility);
+                _intellegenceText.text = string.Concat(_stats.Intellegence + _stats.AddIntellegence);
             }
         }
     }

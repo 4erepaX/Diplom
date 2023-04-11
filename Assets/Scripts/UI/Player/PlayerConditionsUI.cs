@@ -48,7 +48,7 @@ namespace Diplom.UI.Player
                 _healthSlider.value = _playerBattle.Health / _playerStats.Health;
                 _healthText.text = _playerBattle.Health.ToString();
                 _manaSlider.value= _playerBattle.Mana / _playerStats.Mana;
-                _manaText.text = _playerStats.Mana.ToString();
+                _manaText.text = _playerBattle.Mana.ToString();
                 _experienceSlider.value = _playerBattle.Experience / _playerStats.Experience;
                 _experienceText.text = _playerBattle.Experience.ToString();
         
