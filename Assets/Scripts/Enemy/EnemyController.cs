@@ -44,6 +44,7 @@ namespace Diplom.Units.Enemy
             while (_target == null)
             {
                 _target = FindObjectOfType<PlayerController>();
+                if (_target!=null)
                 _playerBattleStats = _target.GetComponent<PlayerBattleComponent>();
                 yield return null;
             }
@@ -52,18 +53,18 @@ namespace Diplom.Units.Enemy
         private void FixedUpdate()
         {
             _moveSpeed = _stats.MoveSpeed;
-            if (_target != null && Vector3.Distance(_target.transform.position, transform.position) < 10 && !_playerBattleStats.IsDie)
+            if (_target != null && Vector3.Distance(_target.transform.position, transform.position) <= 10 && !_playerBattleStats.IsDie)
             {
                 
                 transform.LookAt(_target.transform);
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
                 if (_playerBattleStats != null) AttackPlayer(_target.transform,2);
             }
-            if (_targetBuild != null && (_target == null || Vector3.Distance(_target.transform.position, transform.position) > 10))
+            if (_targetBuild != null && Vector3.Distance(_target.transform.position, transform.position) > 10)
             {
                 
                 transform.LookAt(_targetBuild.transform);
-                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+                transform.rotation = Quaternion.Euler(3f, transform.rotation.eulerAngles.y, 0f);
                 AttackBuilding(_targetBuild.transform,4);
             }
         }
@@ -129,6 +130,5 @@ namespace Diplom.Units.Enemy
 
             trigger.Enable = data.floatParameter == 1;
         }
-
     }
 }

@@ -39,11 +39,14 @@ namespace Diplom.Units.Enemy
         }
         private IEnumerator FindPlayer()
         {
-            while (_enemy.Target != null)
+            while (true)
             {
-                Debug.Log("Лягушки?");
-                _playerStats = _enemy.Target.GetComponent<PlayerStatsComponent>();
-                _playerBattleStats = _enemy.Target.GetComponent<PlayerBattleComponent>();
+                if (_enemy.Target != null)
+                {
+                    _playerStats = _enemy.Target.GetComponent<PlayerStatsComponent>();
+                    _playerBattleStats = _enemy.Target.GetComponent<PlayerBattleComponent>();
+                    break;
+                }
                 yield return null;
             }
         }

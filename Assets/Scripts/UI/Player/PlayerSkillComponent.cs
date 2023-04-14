@@ -178,7 +178,7 @@ namespace Diplom.UI.Player
             _target = skillShop.Target;
             _skillTime = skillShop.SkillTime;
             _debaffType = skillShop.DebaffType;
-            _description = skillShop.Descripion;
+            _description = skillShop.Description;
 
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Diplom.UI.Shop
 {
-    public class SkillShopComponent : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler
+    public class SkillShopComponent : MonoBehaviour,IPointerClickHandler,IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField]
         private SkillType _type;
@@ -30,7 +30,11 @@ namespace Diplom.UI.Shop
         private PlayerSkillBoxComponent _skillBox;
         [SerializeField]
         private GameObject _boughtPanel;
-
+        [SerializeField]
+        private GameObject _descriptionGO;
+        private RectTransform _descriptionRect;
+        [SerializeField]
+        private DescriptionSkillShop _descriptionSkillComponent;
         public SkillType Type=> _type;
         public Sprite Sprite => _sprite;
         public float Cooldown=>_cooldown;
@@ -43,10 +47,13 @@ namespace Diplom.UI.Shop
 
         public float SkillTime=> _skillTime;
 
-        public string Descripion=>_description;
+        public string Description=>_description;
         // Start is called before the first frame update
         void Start()
         {
+            _descriptionGO = FindObjectOfType<DescriptionSkillShop>().gameObject;
+            _descriptionRect = _descriptionGO.GetComponent<RectTransform>();
+            _descriptionSkillComponent = FindObjectOfType<DescriptionSkillShop>();
             _skillBox = FindObjectOfType<PlayerSkillBoxComponent>();
             _sprite = GetComponent<Image>().sprite;
             _isBought = false;
@@ -117,7 +124,9 @@ namespace Diplom.UI.Shop
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            
+            if (_type == SkillType.None) return;
+            _descriptionGO.transform.position = new Vector3(transform.position.x+ _descriptionRect.rect.width, transform.position.y + _descriptionRect.rect.height,0f);
+            _descriptionSkillComponent.GetDescription(this);
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -127,6 +136,12 @@ namespace Diplom.UI.Shop
                 _isBought = true;
                 _boughtPanel.SetActive(true);
             }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (_type == SkillType.None) return;
+            _descriptionGO.transform.position = new Vector3(0f, -925f, 0f);
         }
     }
 }

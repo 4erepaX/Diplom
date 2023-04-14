@@ -1,4 +1,5 @@
-﻿using Diplom.Projectile;
+﻿using Diplom.Managers;
+using Diplom.Projectile;
 using Diplom.Units.Enemy;
 using Diplom.Units.Player;
 using System.Collections;
@@ -18,6 +19,8 @@ namespace Diplom.Buildings
         private float _defence;
         [SerializeField]
         private TMP_Text _healthText;
+        [SerializeField]
+        private GameManager _gameManager;
         public SideType Side => _side;
         public float Health => _health;
         public float Defence => _defence;
@@ -42,6 +45,8 @@ namespace Diplom.Buildings
                 if (_health <= 0)
                 {
                     _health = 0;
+                    _gameManager.CheckLoseConditions(this);
+                    Destroy(gameObject);
                 }
             }
             if (_side == SideType.Enemy)
@@ -60,6 +65,8 @@ namespace Diplom.Buildings
                 if (_health <= 0)
                 {
                     _health = 0;
+                    
+                    _gameManager.CheckWinConditions(this);
                     Destroy(gameObject);
                 }
 

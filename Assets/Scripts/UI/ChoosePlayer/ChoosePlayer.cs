@@ -1,4 +1,5 @@
-﻿using Diplom.Spawners.Player;
+﻿using Diplom.Managers;
+using Diplom.Spawners.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,22 +28,23 @@ namespace Diplom.UI.ChooseHero
         private ChooseHero _wizzard;
         [SerializeField]
         private PlayerSpawner _spawner;
-
+        [SerializeField]
+        private GameManager _gameManager;
         private Color _colorPanel; 
         private bool _isWarrior;
         private bool _isWizzard;
-        
         public GameObject WarriorPrefab=>_warriorPrefab;
         public GameObject WizzardPrefab => _wizzardPrefab;
         private void Start()
         {
+
             _colorPanel = _panel.GetComponent<Image>().color;
         }
         public void StartGame()
         {
             _isWarrior = _warrior.IsChoosen;
             _isWizzard = _wizzard.IsChoosen;
-            
+            _gameManager.StartCoroutine( _gameManager.WaveChange());
             if (_isWarrior) StartCoroutine(Choose(_warriorPrefab, _spawnPoint));
             if (_isWizzard) StartCoroutine(Choose(_wizzardPrefab, _spawnPoint));
             
