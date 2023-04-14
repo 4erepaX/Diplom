@@ -31,19 +31,19 @@ namespace Diplom.UI.Shop
         public string Description=>_description;
         public void OnPointerClick(PointerEventData eventData)
         {
-            //TODO Покупка предметов
             _inventory.AddItem(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            //TODO Описание предметов
+            if (_type == ItemType.None) return;
             _descriptionGO.transform.position = transform.position+new Vector3(50f,150f,0f);
             _descriptionComponent.GetDescription(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (_type == ItemType.None) return;
             _descriptionGO.transform.position =new Vector3(-150f,-640f,0f);
         }
 

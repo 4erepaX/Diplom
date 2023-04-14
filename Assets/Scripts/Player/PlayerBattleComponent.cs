@@ -1,5 +1,6 @@
 ﻿using Diplom.Managers.Enemy;
 using Diplom.Spawners.Player;
+using Diplom.UI.Player;
 using Diplom.UI.Shop;
 using Diplom.Units.Enemy;
 using System.Collections;
@@ -25,11 +26,12 @@ namespace Diplom.Units.Player
         private float _mana;
         private float _experience = 0;
         private int _gold;
-        private bool _isDropEarn;
+        private bool _isDie;
         public float Health => _health;
         public float Mana => _mana;
         public float Experience => _experience;
         public int Gold => _gold;
+        public bool IsDie => _isDie;
         // Start is called before the first frame update
         void Start()
         {
@@ -40,29 +42,9 @@ namespace Diplom.Units.Player
             _spawner = FindObjectOfType<PlayerSpawner>();
             _health = _stats.Health;
             _mana = _stats.Mana;
-
+            _isDie = false;
         }
 
-        private void FixedUpdate()
-        {
-            if (_playerController.Enemy != null)
-            {
-                _enemyStats = _playerController.EnemyStat;
-                _enemyBattle = _playerController.EnemyBattleStat;
-                var exp = _enemyStats.DropExperience;
-                var gold = _enemyStats.DropGold;
-                if (_enemyBattle.IsDie && !_isDropEarn) GetDrop(exp, gold);
-                if (!_enemyBattle.IsDie && _isDropEarn) _isDropEarn = false;
-
-            }
-            else
-            {
-                _isDropEarn = false;
-                _animator.SetBool("Attack", false);
-            }
-
-
-        }
         private void OnTriggerEnter(Collider other)
         {
             var enemy = other.GetComponentInParent<EnemyStatsComponent>();
@@ -72,9 +54,10 @@ namespace Diplom.Units.Player
             }
             if (_health <= 0)
             {
+                transform.position = new Vector3(0f, 0f, 0f);
                 _animator.SetTrigger("Die");
                 _health = 0;
-
+                _isDie = true;
             }
         }
         private void OnDie_UnityEvent(AnimationEvent data)
@@ -101,11 +84,10 @@ namespace Diplom.Units.Player
 
         }
 
-        private void GetDrop(int exp, int gold)
+        public void GetDrop(int exp, int gold)
         {
             _experience += exp;
             _gold += gold;
-            _isDropEarn = true;
         }
 
         public void OnRespawn()
@@ -113,6 +95,7 @@ namespace Diplom.Units.Player
             _health = _stats.Health;
             _mana = _stats.Mana;
             _animator.SetBool("Attack", false);
+            _isDie = false;
         }
         public bool RestoreHP(int RestoreSize)
         {
@@ -147,12 +130,27 @@ namespace Diplom.Units.Player
         }
         public bool BuyItem(ItemShopComponent itemShop)
         {
-            if (_gold > itemShop.Cost)
+            if (_gold >= itemShop.Cost)
             {
                 _gold -= itemShop.Cost;
                 return true;
             }
             return false;
+        }
+        public bool BuySkill(SkillShopComponent skillShop)
+        {
+            if (_gold >= skillShop.Cost)
+            {
+                _gold -= skillShop.Cost;
+                return true;
+            }
+            return false;
+        }
+        public bool ManaCost(PlayerSkillComponent _skill)
+        {
+            if (_mana < _skill.Cost) return false;
+            _mana -= _skill.Cost;
+            return true;
         }
     }
 }

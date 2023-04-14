@@ -8,10 +8,6 @@ namespace Diplom.Spawners.Player
     public class PlayerSpawner : BaseSpawner
     {
 
-        private void Start()
-        {
-           
-        }
         public void GetHero(GameObject prefab)
         {
             _prefab = prefab;

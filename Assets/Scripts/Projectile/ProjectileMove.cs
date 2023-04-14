@@ -16,7 +16,7 @@ namespace Diplom.Projectile
         {
             transform.parent = null;
             transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            transform.rotation =  Quaternion.Euler(new Vector3(0f, transform.rotation.eulerAngles.y-15f, 0f));
+            transform.rotation =  Quaternion.Euler(new Vector3(0f, transform.rotation.eulerAngles.y, 0f));
             transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
         }
 

@@ -1,5 +1,6 @@
 ﻿using Diplom.Managers;
 using Diplom.ScriptableObjects;
+using Diplom.UI.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace Diplom.Units.Enemy
     {
         [SerializeField]
         private EnemyWaveConfiguration _enemyWave;
+        [SerializeField]
+        private float _moveSpeed;
 
         private float _enemyHealth;
         private float _enemyMana;
@@ -21,7 +24,11 @@ namespace Diplom.Units.Enemy
         private int _strength;
         private int _agility;
         private int _intellegence;
-        private GameManager _gameManager; 
+        private GameManager _gameManager;
+        private float _startAttack;
+        private float _startDefence;
+        private float _startMoveSpeed;
+
         public byte Wave => _wave;
         public int Strength=> _strength;
         public int Agility=>_agility;
@@ -32,7 +39,7 @@ namespace Diplom.Units.Enemy
         public float EnemyDefence => _enemyDefence;
         public int DropGold => _gold;
         public int DropExperience => _experience;
-
+        public float MoveSpeed => _moveSpeed;
         // Start is called before the first frame update
         private void Start()
         {
@@ -43,11 +50,6 @@ namespace Diplom.Units.Enemy
             SetDrop();
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         private void GetWaveParameters()
         {
             _strength = _enemyWave.Wave[_wave - 1].Strength;
@@ -66,6 +68,45 @@ namespace Diplom.Units.Enemy
             _gold = _enemyWave.Wave[_wave - 1].Gold;
             _experience = _enemyWave.Wave[_wave - 1].Experience;
         }
-
+        public void DecreaseParameters(PlayerSkillComponent _skill)
+        {
+            switch (_skill.DebaffType)
+            {
+                case DebaffType.DecreaseAttack:
+                    Debug.Log(_enemyAttack);
+                    _startAttack = _enemyAttack;
+                    _enemyAttack = 80 * _enemyAttack / 100;
+                    StartCoroutine(SkillCancelled(_skill.SkillTime, DebaffType.DecreaseAttack, _startAttack));
+                    break;
+                case DebaffType.DecreaseDefense:
+                    _startDefence = _enemyDefence;
+                    _enemyDefence = 80 * _enemyDefence / 100;
+                    StartCoroutine(SkillCancelled(_skill.SkillTime, DebaffType.DecreaseDefense, _startDefence));
+                    break;
+                case DebaffType.Slowdown:
+                    _startMoveSpeed = _moveSpeed;
+                    _moveSpeed= 80 * _moveSpeed / 100;
+                    StartCoroutine(SkillCancelled(_skill.SkillTime, DebaffType.Slowdown, _startMoveSpeed));
+                    break;
+            }
+        }
+        private IEnumerator SkillCancelled(float time, DebaffType _type, float startEnemyParameter)
+        {
+            yield return new WaitForSeconds(time);
+            switch (_type)
+            {
+                case DebaffType.DecreaseAttack:
+                    _enemyAttack = startEnemyParameter;
+                    break;
+                case DebaffType.DecreaseDefense:
+                    _enemyDefence = startEnemyParameter;
+                    break;
+                case DebaffType.Slowdown:
+                    _moveSpeed = startEnemyParameter;
+                    break;
+            }
+            
+            
+        }
     }
 }

@@ -24,18 +24,19 @@ namespace Diplom.UI.Player
         private Slider _manaSlider;
         [SerializeField]
         private Slider _experienceSlider;
-
+        [SerializeField]
         private PlayerStatsComponent _playerStats;
+        [SerializeField]
         private PlayerBattleComponent _playerBattle;
         // Start is called before the first frame update
         private void Awake()
         {
-            _playerStats = FindObjectOfType<PlayerStatsComponent>();
-            _playerBattle= FindObjectOfType<PlayerBattleComponent>();
+            
         }
         void Start()
         {
-           
+            _playerStats = FindObjectOfType<PlayerStatsComponent>();
+            _playerBattle = FindObjectOfType<PlayerBattleComponent>();
         }
 
         // Update is called once per frame

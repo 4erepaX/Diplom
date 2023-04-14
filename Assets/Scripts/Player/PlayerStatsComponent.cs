@@ -1,4 +1,5 @@
 ﻿using Diplom.ScriptableObjects;
+using Diplom.UI.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace Diplom.Units.Player
         private byte _level;
         private float _hp;
         private float _mp;
-
+        private float _startAttack;
         public float HP => _hp;
         public float MP => _mp;
         public float Health => _health;
@@ -125,6 +126,26 @@ namespace Diplom.Units.Player
             SetAddedParameters();
             SetParameters();
         }
-
+        public void IncreaseParameters(PlayerSkillComponent _skill)
+        {
+            switch (_skill.Type)
+            {
+                case SkillType.Baff:
+                    _startAttack = _attack;
+                    _attack = 120 * _attack / 100;
+                    StartCoroutine(SkillCancelled(_skill.SkillTime, SkillType.Baff, _startAttack));
+                    break;
+            }
+        }
+        private IEnumerator SkillCancelled(float time, SkillType _type, float startEnemyParameter)
+        {
+            yield return new WaitForSeconds(time);
+            switch (_type)
+            {
+                case SkillType.Baff:
+                    _attack = _startAttack;
+                    break;
+            }
+        }
     }
 }

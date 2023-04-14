@@ -23,14 +23,16 @@ namespace Diplom.Units.Player
         private PlayerStatsComponent _stats;
         protected Rigidbody _body;
         private int _range;
+        private bool _isMoving;
         [SerializeField]
         private LayerMask _mask;
         private BuildingComponent _enemyBuilding;
-
+        private Vector3 _targetMove;
         public EnemyController Enemy => _enemy;
         public EnemyBattleComponent EnemyBattleStat=>_enemyBattleStat;
         public EnemyStatsComponent EnemyStat=>_enemyStat;
         public BuildingComponent EnemyBuilding => _enemyBuilding;
+        
         private void OnEnable()
         {
             switch (_type)
@@ -39,7 +41,7 @@ namespace Diplom.Units.Player
                     _range = 2;
                     break;
                 case PlayerType.Wizzard:
-                    _range = 5;
+                    _range = 8;
                     break;
 
             }
@@ -63,8 +65,13 @@ namespace Diplom.Units.Player
 
                     if (Mathf.Pow(2, hit.collider.gameObject.layer) == _mask.value)
                     {
-                        var targetMove = hit.point;
-                        if (_enemy == null) StartCoroutine(MoveForward(targetMove));
+                        _targetMove = hit.point;
+                        if (_enemy == null)
+                        {
+                            
+                            StartCoroutine(MoveForward(_targetMove));
+                            
+                        }
                     }
                     if (hit.collider.GetComponent<EnemyController>() != null)
                     {
@@ -86,72 +93,90 @@ namespace Diplom.Units.Player
                     }
                     else
                         _enemyBuilding = null;
-                    if (_enemy != null || _enemyBuilding != null) StartCoroutine(MoveTarget());
+                    if (_enemy != null || _enemyBuilding != null) MoveTarget();
                 }
             }
         }
         private IEnumerator MoveForward(Vector3 target)
         {
             _animator.SetBool("Attack", false) ;
-            
-            while (_enemy == null)
-            {                
+            _isMoving = true;
+            while (Vector3.Distance(target, transform.position) > 0.5)
+            {
                 var velocity = _body.velocity;
                 transform.LookAt(target);
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
                 velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
                 _body.velocity = transform.forward * velocity.z;
                 _animator.SetFloat("Movement", velocity.z);
-                if (Vector3.Distance(target, transform.position) < 0.5)
-                {
-                    _body.velocity = new Vector3(0f, 0f, 0f);
-                    _animator.SetFloat("Movement", 0f);
-                    StopCoroutine(MoveForward(target));
-                }
+                if (target!=_targetMove) break;
                 yield return new WaitForFixedUpdate();
             }
-
-        }
-        private IEnumerator MoveTarget()
-        {
-            while (_enemy != null || _enemyBuilding != null)
-            {
-                Vector3 target;
-                if (_enemy != null)
-                {
-                    target = _enemy.transform.position;
-                    MoveToEnemy(target, _range);
-                }
-                if (_enemyBuilding != null)
-                {
-                    target = _enemyBuilding.transform.position;
-                    MoveToEnemy(target, _range + 3f);
-                }
-                yield return new WaitForFixedUpdate();
-            }
-        
-        }
-        private void MoveToEnemy(Vector3 target, float range)
-        {
-            var velocity = _body.velocity;
-            transform.LookAt(target);
-            transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-            velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
-            _body.velocity = transform.forward * velocity.z;
-            _animator.SetFloat("Movement", velocity.z);
-            if (Vector3.Distance(target, transform.position) < range)
+            if (Vector3.Distance(target, transform.position) <= 0.5)
             {
                 _body.velocity = new Vector3(0f, 0f, 0f);
                 _animator.SetFloat("Movement", 0f);
-                if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
-                else _animator.SetBool("Attack", false);
+                _isMoving = false;
+
             }
-            else
+            yield return null;
+        }
+        private void MoveTarget()
+        {
+            StartCoroutine(MoveToEnemy(_range));
+        }
+        private IEnumerator MoveToEnemy(float range)
+        {
+            while (_enemy != null || _enemyBuilding != null)
             {
+                if (_enemy != null)               
+                    _targetMove = _enemy.transform.position;
+                
+                if (_enemyBuilding != null)                
+                    _targetMove = _enemyBuilding.transform.position;
+                
+
+                var velocity = _body.velocity;
+                transform.LookAt(_targetMove);
+                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+                velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
+                _body.velocity = transform.forward * velocity.z;
+                _animator.SetFloat("Movement", velocity.z);
+                Attack(_targetMove, range);
+                yield return new WaitForFixedUpdate();
+            }
+            
+        }
+
+        
+        private void Attack(Vector3 target, float range)
+        {
+            if (!_enemyBattleStat.IsDie)
+            {
+                if (Vector3.Distance(target, transform.position) < range)
+                {
+                    _body.velocity = new Vector3(0f, 0f, 0f);
+                    _animator.SetFloat("Movement", 0f);
+                    if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
+                    else _animator.SetBool("Attack", false);
+                }
+                else
+                {
+
+                    _animator.SetBool("Attack", false);
+                }
+            }
+            if (_enemyBattleStat.IsDie)
+            {
+                _body.velocity = new Vector3(0f, 0f, 0f);
+                _animator.SetFloat("Movement", 0f);
+                _targetMove = transform.position;
+                _enemy = null;
+                _enemyBattleStat = null;
+                _enemyStat = null;
                 _animator.SetBool("Attack", false);
             }
         }
-        
 
         private void OnCollider_UnityEvent(AnimationEvent data)
         {

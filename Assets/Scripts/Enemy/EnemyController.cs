@@ -10,7 +10,7 @@ namespace Diplom.Units.Enemy
 
     public class EnemyController : MonoBehaviour
     {
-        [SerializeField]
+        
         private float _moveSpeed;
         [SerializeField]
         private PlayerController _target;
@@ -19,54 +19,78 @@ namespace Diplom.Units.Enemy
         private TriggerComponent[] _triggers;
         private Rigidbody _body;
         private Animator _animator;
-        
+        [SerializeField]
+        private EnemyStatsComponent _stats;
+        [SerializeField]
+        private EnemyBattleComponent _battleStats;
+        private PlayerBattleComponent _playerBattleStats;
         private bool _isFinalWave;
+
+        public PlayerController Target => _target;
         // Start is called before the first frame update
         void Start()
         {
             _body = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
-            _triggers = GetComponentsInChildren<TriggerComponent>();
-            StartCoroutine(MoveForward());
+            _triggers = GetComponentsInChildren<TriggerComponent>();           
             _targetBuild = FindObjectsOfType<BuildingComponent>().Where(t => t.Side == SideType.Friendly).FirstOrDefault();
             _target = FindObjectOfType<PlayerController>();
+            _stats = GetComponent<EnemyStatsComponent>();
+            _battleStats = GetComponent<EnemyBattleComponent>();
+            _playerBattleStats = _target.GetComponent<PlayerBattleComponent>();
+            StartCoroutine(MoveForward());
         }
 
         // Update is called once per frame
         private void FixedUpdate()
         {
-            
-            if (_target != null && Vector3.Distance(_target.transform.position, transform.position) < 10)
+            _moveSpeed = _stats.MoveSpeed;
+            if (_target != null && Vector3.Distance(_target.transform.position, transform.position) < 10 && !_playerBattleStats.IsDie)
             {
+                
                 transform.LookAt(_target.transform);
+                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
                 Attack(_target.transform,2);
             }
             if (_targetBuild != null && (_target == null || Vector3.Distance(_target.transform.position, transform.position) > 10))
             {
+                
                 transform.LookAt(_targetBuild.transform);
+                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
                 Attack(_targetBuild.transform,4);
             }
         }
         private void Attack(Transform target,float range)
         {
-            if (Vector3.Distance(target.position, transform.position) < range)
+            if (!_playerBattleStats.IsDie)
             {
-                _body.velocity = new Vector3(0f, 0f, 0f);
-                _animator.SetFloat("Movement", 0f);
-                if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
-                else _animator.SetBool("Attack", false);
+                if (Vector3.Distance(target.position, transform.position) < range)
+                {
+                    _body.velocity = new Vector3(0f, 0f, 0f);
+                    _animator.SetFloat("Movement", 0f);
+                    _animator.SetBool("Attack", true);
+                   if (_battleStats.IsDie)
+                    {
+                        _animator.SetBool("Attack", false);
+                        _body.velocity = new Vector3(0f, 0f, 0f);
+                        _animator.SetFloat("Movement", 0f);
+                    }
+                }
+                else
+                {
+                    _animator.SetBool("Attack", false);
+                }
             }
-            else
-            {
-                _animator.SetBool("Attack", false);
-            }
+            
         }
         private IEnumerator MoveForward()
         {
             while (true)
             {
+                
                 _body.velocity = transform.forward * _moveSpeed * Time.fixedDeltaTime;
                 _animator.SetFloat("Movement",Mathf.Abs( _body.velocity.z));
+                if (_battleStats.IsDie) break;
                 yield return null;
             }
         }
