@@ -1724,6 +1724,8 @@ MonoBehaviour:
   _mask:
     serializedVersion: 2
     m_Bits: 256
+  _enemyHealth: {fileID: 0}
+  _enemyPanel: {fileID: 0}
 --- !u!114 &4507881718115398261
 MonoBehaviour:
   m_ObjectHideFlags: 0

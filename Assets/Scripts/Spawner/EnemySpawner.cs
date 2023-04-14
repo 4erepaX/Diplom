@@ -1,4 +1,5 @@
-﻿using Diplom.Managers.Enemy;
+﻿using Diplom.Buildings;
+using Diplom.Managers.Enemy;
 using Diplom.Units.Enemy;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Diplom.Spawners.Enemy
         private LinkedList<EnemyController> _enemies = new LinkedList<EnemyController>();
         [SerializeField]
         private EnemyManager _enemyManager;
+        [SerializeField]
+        private BuildingComponent _enemyHouse; 
         public GameObject Enemy => _enemy;
         // Start is called before the first frame update
         void Start()
@@ -28,6 +31,7 @@ namespace Diplom.Spawners.Enemy
         {
             while (true)
             {
+                if (_enemyHouse == null) break;
                 yield return new WaitForSeconds(20f);
                 if (_enemyManager.Enemies.Count < 12)
                 {
@@ -39,6 +43,7 @@ namespace Diplom.Spawners.Enemy
                     }
                     
                 }
+                
                 
             }
         }

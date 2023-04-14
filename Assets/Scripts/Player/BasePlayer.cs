@@ -6,6 +6,7 @@ using Diplom.Units.Enemy;
 using System.Linq;
 using Diplom.Buildings;
 using Diplom.UI.Enemy;
+using TMPro;
 
 namespace Diplom.Units.Player
 {
@@ -129,32 +130,45 @@ namespace Diplom.Units.Player
         {
             while (_enemy != null || _enemyBuilding != null)
             {
-                if (_enemy != null)               
+                if (_enemy != null)
+                {
                     _targetMove = _enemy.transform.position;
-                
-                if (_enemyBuilding != null)                
+                    var velocity = _body.velocity;
+                    transform.LookAt(_targetMove);
+                    transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+                    velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
+                    _body.velocity = transform.forward * velocity.z;
+                    _animator.SetFloat("Movement", velocity.z);
+                    AttackEnemy(_targetMove, range);
+                }
+                if (_enemyBuilding != null)
+                {
                     _targetMove = _enemyBuilding.transform.position;
-                
+                    var velocity = _body.velocity;
+                    transform.LookAt(_targetMove);
+                    transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+                    velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
+                    _body.velocity = transform.forward * velocity.z;
+                    _animator.SetFloat("Movement", velocity.z);
+                    AttackEnemyHouse(_targetMove, range);
 
-                var velocity = _body.velocity;
-                transform.LookAt(_targetMove);
-                transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-                velocity.z = _forwardMoveSpeed * Time.fixedDeltaTime;
-                _body.velocity = transform.forward * velocity.z;
-                _animator.SetFloat("Movement", velocity.z);
-                Attack(_targetMove, range);
+                }
+
+                
                 yield return new WaitForFixedUpdate();
             }
             
         }
 
         
-        private void Attack(Vector3 target, float range)
+        private void AttackEnemy(Vector3 target, float range)
         {
             if (!_enemyBattleStat.IsDie)
             {
+               
                 if (Vector3.Distance(target, transform.position) < range)
                 {
+                    
                     _body.velocity = new Vector3(0f, 0f, 0f);
                     _animator.SetFloat("Movement", 0f);
                     if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
@@ -175,9 +189,25 @@ namespace Diplom.Units.Player
                 _enemyBattleStat = null;
                 _enemyStat = null;
                 _animator.SetBool("Attack", false);
+
             }
         }
+        private void AttackEnemyHouse(Vector3 target, float range)
+        {
+                if (Vector3.Distance(target, transform.position) < range+2.5)
+                {
+                    _body.velocity = new Vector3(0f, 0f, 0f);
+                    _animator.SetFloat("Movement", 0f);
+                    if (!_animator.GetBool("Die")) _animator.SetBool("Attack", true);
+                    else _animator.SetBool("Attack", false);
+                }
+                else
+                {
 
+                    _animator.SetBool("Attack", false);
+                }
+           
+        }
         private void OnCollider_UnityEvent(AnimationEvent data)
         {
             var collider = _colliders.FirstOrDefault(t => t.GetID == data.intParameter);

@@ -3,6 +3,7 @@ using Diplom.Units.Enemy;
 using Diplom.Units.Player;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Diplom.Buildings
@@ -15,6 +16,8 @@ namespace Diplom.Buildings
         private float _health;
         [SerializeField]
         private float _defence;
+        [SerializeField]
+        private TMP_Text _healthText;
         public SideType Side => _side;
         public float Health => _health;
         public float Defence => _defence;
@@ -22,6 +25,10 @@ namespace Diplom.Buildings
         {
             _health = 10000;
             _defence = 1000;
+        }
+        private void Update()
+        {
+            _healthText.text = string.Concat("Health: ",_health);
         }
         private void OnTriggerEnter(Collider other)
         {

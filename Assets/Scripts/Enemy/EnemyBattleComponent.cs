@@ -19,6 +19,7 @@ namespace Diplom.Units.Enemy
         private Animator _animator;
         private EnemyStatsComponent _stats;
         private PlayerStatsComponent _playerStats;
+        [SerializeField]
         private PlayerBattleComponent _playerBattleStats;
         private bool _isDie;
         private EnemyController _enemy;
@@ -34,8 +35,17 @@ namespace Diplom.Units.Enemy
             _animator = GetComponent<Animator>();
             _health = _stats.EnemyHealth;
             _enemy = GetComponent<EnemyController>();
-            _playerStats = _enemy.Target.GetComponent<PlayerStatsComponent>();
-            _playerBattleStats = _enemy.Target.GetComponent<PlayerBattleComponent>();
+            StartCoroutine(FindPlayer());
+        }
+        private IEnumerator FindPlayer()
+        {
+            while (_enemy.Target != null)
+            {
+                Debug.Log("Лягушки?");
+                _playerStats = _enemy.Target.GetComponent<PlayerStatsComponent>();
+                _playerBattleStats = _enemy.Target.GetComponent<PlayerBattleComponent>();
+                yield return null;
+            }
         }
         private void OnTriggerEnter(Collider other)
         {

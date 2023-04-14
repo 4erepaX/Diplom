@@ -34,13 +34,20 @@ namespace Diplom.Units.Enemy
             _animator = GetComponent<Animator>();
             _triggers = GetComponentsInChildren<TriggerComponent>();           
             _targetBuild = FindObjectsOfType<BuildingComponent>().Where(t => t.Side == SideType.Friendly).FirstOrDefault();
-            _target = FindObjectOfType<PlayerController>();
             _stats = GetComponent<EnemyStatsComponent>();
             _battleStats = GetComponent<EnemyBattleComponent>();
-            _playerBattleStats = _target.GetComponent<PlayerBattleComponent>();
+            StartCoroutine(FindPlayer());
             StartCoroutine(MoveForward());
         }
-
+        private IEnumerator FindPlayer()
+        {
+            while (_target == null)
+            {
+                _target = FindObjectOfType<PlayerController>();
+                _playerBattleStats = _target.GetComponent<PlayerBattleComponent>();
+                yield return null;
+            }
+        }    
         // Update is called once per frame
         private void FixedUpdate()
         {
@@ -50,17 +57,17 @@ namespace Diplom.Units.Enemy
                 
                 transform.LookAt(_target.transform);
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-                Attack(_target.transform,2);
+                if (_playerBattleStats != null) AttackPlayer(_target.transform,2);
             }
             if (_targetBuild != null && (_target == null || Vector3.Distance(_target.transform.position, transform.position) > 10))
             {
                 
                 transform.LookAt(_targetBuild.transform);
                 transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-                Attack(_targetBuild.transform,4);
+                AttackBuilding(_targetBuild.transform,4);
             }
         }
-        private void Attack(Transform target,float range)
+        private void AttackPlayer(Transform target,float range)
         {
             if (!_playerBattleStats.IsDie)
             {
@@ -82,6 +89,28 @@ namespace Diplom.Units.Enemy
                 }
             }
             
+        }
+        private void AttackBuilding(Transform target, float range)
+        {
+
+                if (Vector3.Distance(target.position, transform.position) < range)
+                {
+                    _body.velocity = new Vector3(0f, 0f, 0f);
+                    _animator.SetFloat("Movement", 0f);
+                    _animator.SetBool("Attack", true);
+                    if (_battleStats.IsDie)
+                    {
+                        _animator.SetBool("Attack", false);
+                        _body.velocity = new Vector3(0f, 0f, 0f);
+                        _animator.SetFloat("Movement", 0f);
+                    }
+                }
+                else
+                {
+                    _animator.SetBool("Attack", false);
+                }
+            
+
         }
         private IEnumerator MoveForward()
         {
